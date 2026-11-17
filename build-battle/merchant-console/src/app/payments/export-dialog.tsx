@@ -12,10 +12,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/Dialog"
+import type { ExportColumn, ExportScope } from "@/lib/csv"
 import { Download } from "lucide-react"
 import { useState } from "react"
 
-const COLUMN_LABELS: Record<string, string> = {
+const COLUMN_LABELS: Record<ExportColumn, string> = {
   id: "Payment ID",
   created_at: "Created (UTC)",
   merchant: "Merchant",
@@ -27,8 +28,6 @@ const COLUMN_LABELS: Record<string, string> = {
   amount: "Amount",
   currency: "Currency",
 }
-
-type Scope = "filter" | "all"
 
 /**
  * Builds a download link to the server export. Nothing is filtered or
@@ -42,17 +41,17 @@ export function ExportDialog({
   filteredCount,
   allCount,
 }: {
-  columns: readonly string[]
-  defaultColumns: readonly string[]
+  columns: readonly ExportColumn[]
+  defaultColumns: readonly ExportColumn[]
   /** The current filters as a query string, without page. */
   filterQuery: string
   filteredCount: number
   allCount: number
 }) {
-  const [selected, setSelected] = useState<string[]>([...defaultColumns])
-  const [scope, setScope] = useState<Scope>("filter")
+  const [selected, setSelected] = useState<ExportColumn[]>([...defaultColumns])
+  const [scope, setScope] = useState<ExportScope>("filter")
 
-  const toggle = (column: string, checked: boolean) =>
+  const toggle = (column: ExportColumn, checked: boolean) =>
     setSelected((current) =>
       checked ? [...current, column] : current.filter((c) => c !== column),
     )
@@ -126,7 +125,7 @@ export function ExportDialog({
                     onChange={(event) => toggle(column, event.target.checked)}
                     className="size-4 rounded border-gray-300 text-blue-500 dark:border-gray-700"
                   />
-                  {COLUMN_LABELS[column] ?? column}
+                  {COLUMN_LABELS[column]}
                 </label>
               ))}
             </div>
@@ -172,9 +171,9 @@ function ScopeOption({
   label,
   count,
 }: {
-  value: Scope
+  value: ExportScope
   checked: boolean
-  onSelect: (scope: Scope) => void
+  onSelect: (scope: ExportScope) => void
   label: string
   count: number
 }) {

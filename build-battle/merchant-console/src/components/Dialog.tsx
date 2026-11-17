@@ -17,11 +17,21 @@ const Dialog = (
 }
 Dialog.displayName = "Dialog"
 
-const DialogTrigger = DialogPrimitives.Trigger
-DialogTrigger.displayName = "DialogTrigger"
+const DialogTrigger = React.forwardRef<
+  React.ComponentRef<typeof DialogPrimitives.Trigger>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitives.Trigger>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitives.Trigger ref={ref} className={cx(className)} {...props} />
+))
+DialogTrigger.displayName = "Dialog.Trigger"
 
-const DialogClose = DialogPrimitives.Close
-DialogClose.displayName = "DialogClose"
+const DialogClose = React.forwardRef<
+  React.ComponentRef<typeof DialogPrimitives.Close>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitives.Close>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitives.Close ref={ref} className={cx(className)} {...props} />
+))
+DialogClose.displayName = "Dialog.Close"
 
 const DialogContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitives.Content>,
